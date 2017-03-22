@@ -1,0 +1,10 @@
+spyne>=2.12.14
+celery==3.1.25
+pysnmp>=4.3.4
+redis>=2.10.5
+requests>=2.13.0
+suds>=0.4
+pyyaml>=3.12
+apscheduler>=3.3.1
+xlrd>=0.9.4
+zeep>=1.1.0
