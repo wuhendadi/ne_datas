@@ -81,6 +81,31 @@ class DeviceService(ServiceBase):
     
     
     @rpc(_returns=ResultModel)
+    def activeGetNeFrameTms(self):
+
+        return ResultModel(resultsign=1)
+    
+    
+    def passiveSetNeFrameVendor(self):
+        return
+    
+    @rpc(_returns=ResultModel)
+    def activeGetNeSlotTms(self):
+
+        return ResultModel(resultsign=1)
+    
+    def passiveSetNeSlotVendor(self):
+        return
+    
+    @rpc(_returns=ResultModel)
+    def activeGetNeCardTms(self):
+
+        return ResultModel(resultsign=1)
+    
+    def passiveSetNeCardVendor(self):
+        return
+    
+    @rpc(_returns=ResultModel)
     def activeGetNePortTms(self):
 
         return ResultModel(resultsign=1)
@@ -120,6 +145,15 @@ class DeviceService(ServiceBase):
     
     
     @rpc(_returns=ResultModel)
+    def activeGetNePortRelationTms(self):
+
+        return ResultModel(resultsign=1)
+    
+    def passiveSetNePortRelationVendor(self):
+        return
+    
+    
+    @rpc(_returns=ResultModel)
     def activeGetLinkTms(self):
 
         return ResultModel(resultsign=1)
@@ -144,39 +178,34 @@ class DeviceService(ServiceBase):
     
     
     @rpc(_returns=ResultModel)
-    def activeSetNePerfVendor(self):
-        
-        def _do_ftp():
-            tmp_list = []
-            ne_prefs = db_base.session_select('perf:ne:zj_*:ne')
-            for _ne_perf_key in ne_prefs:
-                _ne_perf = db_base.session_get(_ne_perf_key)
-                new_ne_perf = Neperf(neid         = _get_value(_ne_perf, 'neid'),
-                                    equipid       = _get_value(_ne_perf, 'equipid'),
-                                    cpu           = _get_value(_ne_perf, 'cpu'),
-                                    avgcpu        = _get_value(_ne_perf, 'avgcpu'),
-                                    memory        = _get_value(_ne_perf, 'memory'),
-                                    runstatus     = _get_value(_ne_perf, 'runstatus'),
-                                    runnormaltime = _get_value(_ne_perf, 'runnormaltime'),
-                                    gathertime    = _get_value(_ne_perf, 'gathertime'))
-                tmp_list.append(new_ne_perf)
-                
-            #===================================================================
-            # ret = ResultModel(neperfs=tmp_list)
-            # filename = './activeSetNePerfVendor_%s.xml'%time.time()
-            # xml_str = etree.tostring(get_object_as_xml(ret, ResultModel), pretty_print=True)
-            # with open(filename, 'wb') as infile: 
-            #     infile.write(xml_str.replace("ns0:", ""))
-            #     
-            # ftp_up(filename)
-            #===================================================================
-            ftp_up_xml(ResultModel(neperfs=tmp_list), ResultModel, "activeSetNePerfVendor")
-        
-        thread.start_new_thread(_do_ftp, ())
-        
+    def activeGetConfigFileTms(self):
+
         return ResultModel(resultsign=1)
-        
     
+    def passiveSetConfigFileVendor(self):
+        return
+    
+    
+    @rpc(_returns=ResultModel)
+    def activeGetVpnTms(self):
+
+        return ResultModel(resultsign=1)
+    
+    def passiveSetVpnVendor(self):
+        return
+    
+    
+    @rpc(_returns=ResultModel)
+    def activeGetVlanTms(self):
+
+        return ResultModel(resultsign=1)
+    
+    def passiveSetVlanVendor(self):
+        return
+    
+
+####################################################################################################################
+  
     @rpc(_returns=ResultModel)
     def activeGetAlarmTms(self):
          
@@ -200,6 +229,41 @@ class DeviceService(ServiceBase):
             ftp_up_xml(ResultModel(alarms=tmp_list), ResultModel, "activeGetAlarmTms")
         
         thread.start_new_thread(_do_perf_alarm_ftp, ())
+        return ResultModel(resultsign=1)
+    
+    @rpc(_returns=ResultModel)
+    def activeGetAlarmByDeviceTms(self):
+
+        return ResultModel(resultsign=1)
+    
+    
+    def passiveSetAlarmByDeviceVendor(self):
+        return
+    
+########################################################################################################################    
+    
+    
+    @rpc(Neobjlist, _returns=ResultModel)
+    def activeGetNePerfTms(self, neobjlist):
+         
+        def _do_ftp():
+            tmp_list = []
+            ne_prefs = db_base.session_select('perf:ne:zj_*:ne')
+            for _ne_perf_key in ne_prefs:
+                _ne_perf = db_base.session_get(_ne_perf_key)
+                new_ne_perf = Neperf(equipid       = _get_value(_ne_perf, 'equipid'),
+                                     cpu           = _get_value(_ne_perf, 'cpu'),
+                                     avgcpu        = _get_value(_ne_perf, 'avgcpu'),
+                                     memory        = _get_value(_ne_perf, 'memory'),
+                                     runstatus     = _get_value(_ne_perf, 'runstatus'),
+                                     runnormaltime = _get_value(_ne_perf, 'runnormaltime'),
+                                     gathertime    = _get_value(_ne_perf, 'gathertime'))
+                tmp_list.append(new_ne_perf)
+                 
+            ftp_up_xml(ResultModel(neperfs=tmp_list), ResultModel, "activeSetNePerfVendor")
+         
+        thread.start_new_thread(_do_ftp, ())
+         
         return ResultModel(resultsign=1)
     
     
@@ -239,6 +303,23 @@ class DeviceService(ServiceBase):
         
         thread.start_new_thread(_do_perf_port_ftp, ())
         return ResultModel(resultsign=1)
+    
+    
+    @rpc(_returns=ResultModel)
+    def activeGetLinkPerfTms(self):
+        return
+    
+    @rpc(_returns=ResultModel)
+    def activeGetCardPerfTms(self):
+        return
+    
+######################################################################################################################
+
+    @rpc(Neobjlist, _returns=ResultModel)
+    def activeGetFlowTms(self, neobjlist):
+        return
+    
+    
     
     
 def on_method_return_string(ctx):
