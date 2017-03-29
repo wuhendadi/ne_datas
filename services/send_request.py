@@ -5,7 +5,7 @@
 
 from datas import db_base
 from zeep import Client
-from services.utils import ResultModel, Neperf, Portperf
+from services.utils import ResultModel, Neperf, Portperf, Linkperf, Cardperf, Flow
 from tasks.ftp_worker import ftp_up_xml
 from settings import server_url, sys_name, user_label, version
 
@@ -115,7 +115,7 @@ def update_alarm_vendor(items=None):
     if not items: items = db_base.session_get("nms_info_list")
     t_client.service.activeSetAlarmVendor()
     factory = t_client.type_factory("services.utils")
-    tmp_list = factory.neArray([factory.ne(neid=k, nename=v) for (k,v) in items.items()])
+    tmp_list = factory.neArray([factory.alarm(neid=k, nename=v) for (k,v) in items.items()])
     sys_obj = factory.sys(name=sys_name, userlabel=user_label, version=version, nes=tmp_list)
     respose = t_client.service.passiveSetAlarmTms(sys_obj)
     return respose
@@ -136,20 +136,20 @@ def update_port_perf_vendor(items=None):
 def update_link_perf_vendor(items=None):
     if not items: items = db_base.session_get("nms_info_list")
     t_client.service.activeSetLinkPerfVendor()
-    tmp_list = [Neperf(neid=k, nename=v) for (k,v) in items.items()]
-    ftp_up_xml(ResultModel(neperfs=tmp_list), ResultModel, "activeSetLinkPerfVendor")
+    tmp_list = [Linkperf(**one) for one in items]
+    ftp_up_xml(ResultModel(linkperfs=tmp_list), ResultModel, "activeSetLinkPerfVendor")
     
 def update_card_perf_vendor(items=None):
     if not items: items = db_base.session_get("nms_info_list")
     t_client.service.activeSetCardPerfVendor()
-    tmp_list = [Neperf(neid=k, nename=v) for (k,v) in items.items()]
-    ftp_up_xml(ResultModel(neperfs=tmp_list), ResultModel, "activeSetCardPerfVendor")
+    tmp_list = [Cardperf(**one) for one in items]
+    ftp_up_xml(ResultModel(cardperfs=tmp_list), ResultModel, "activeSetCardPerfVendor")
 
-def update_flow_perf_vendor(items=None):
+def update_flow_vendor(items=None):
     if not items: items = db_base.session_get("nms_info_list")
     t_client.service.activeSetFlowVendor()
-    tmp_list = [Neperf(neid=k, nename=v) for (k,v) in items.items()]
-    ftp_up_xml(ResultModel(neperfs=tmp_list), ResultModel, "activeSetFlowVendor")
+    tmp_list = [Flow(**one) for one in items]
+    ftp_up_xml(ResultModel(flows=tmp_list), ResultModel, "activeSetFlowVendor")
 
 def compare_list(key, base_list, callbackfunc):
     new_list = db_base.session_select_all(key)

@@ -17,7 +17,42 @@ class Flow(ComplexModel):
            ('p_flow', Unicode),
            ('p_inflow', Unicode),
            ('p_outflow', Unicode),
+           ('starttime', Unicode),
+           ('endtime', Unicode),
+           ('srcip', Unicode),
+           ('srcport', Unicode),
+           ('destip', Unicode),
+           ('destport', Unicode),
+           ('protocal ', Unicode),
+           ('packagesize', Unicode),
+           ('packagecount', Unicode),
+           ('passport', Unicode),
            ]
+    
+class Cardperf(ComplexModel):
+    
+    __type_name__  = 'cardperf'
+    _type_info = [
+            ('cardid', Unicode),
+            ('occ_cpu', Unicode),
+            ('occ_memory', Unicode),
+            ('gathertime', Unicode),
+            ]
+    
+    
+class Linkperf(ComplexModel):
+    
+    __type_name__  = 'linkperf'
+    _type_info = [
+            ('linkid', Unicode),
+            ('linkstatus', Unicode),
+            ('speed', Unicode),
+            ('occ_rate', Unicode),
+            ('occ_lostpackages', Unicode),
+            ('occ_errpackages', Unicode),
+            ('shake', Unicode),
+            ('gathertime', Unicode),
+            ]
 
 
 class Portperf(ComplexModel):
@@ -115,7 +150,7 @@ class Configfile(ComplexModel):
 
 class Link(ComplexModel):
     
-    __type_name__  = 'portrelation'
+    __type_name__  = 'link'
     _type_info = [
             ('linkid', Unicode),
             ('linkname', Unicode),
@@ -267,7 +302,10 @@ class ResultModel(ComplexModel):
             ('vlans', Array(Vlan)),
             ('alarms', Array(Alarm)),
             ('neperfs', Array(Neperf)),
-            ('portperfs', Array(Portperf))
+            ('portperfs', Array(Portperf)),
+            ('linkperfs', Array(Linkperf)),
+            ('cardperfs', Array(Cardperf)),
+            ('flows', Array(Flow))
             ]
     
     
