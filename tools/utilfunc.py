@@ -9,6 +9,7 @@ def _get_value(obj, key, default='null'):
     if isinstance(str_obj, str): return unicode(str_obj.decode().encode('utf-8'))
     return str_obj
 
+
 def _get_request(api_host, api_port, api_func, api_name, api_key, params={}):
     s = requests.Session()
     url = 'http://%s:%s/api/json/%s/%s?apiKey=%s'%(api_host, api_port, api_func, api_name, api_key)

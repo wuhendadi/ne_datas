@@ -15,7 +15,19 @@ from tools.utilfunc import _get_value
 from tasks.snmp_worker import do_snmp_work
 from tasks.ftp_worker import ftp_up_xml
 
+
+def _make_ret_array(items, target_obj):
+    tmp_list = []
+    for _one in items:
+        new_ne = {k:_get_value(_one, k) for k in _one.keys()}
+        tmp_ne = target_obj(**new_ne)
+        tmp_list.append(tmp_ne)
+        
+    return tmp_list
+
+
 class DeviceService(ServiceBase):
+    
     
     #############################TEST SERVER API##############################################
     @rpc(_returns=ResultModel)
@@ -53,29 +65,28 @@ class DeviceService(ServiceBase):
     @rpc(Neobjlist, _returns=ResultModel)
     def passiveSetNeVendor(self, Neobjlist):
         
-        tmp_list, ne_items = [], []
         if not Neobjlist:
             ne_items = db_base.session_select_all('ne:zj_*:ne')
         else:
-            for _ne in Neobjlist:                 
-                _ne = db_base.session_get('ne:%s:ne'%_ne)
-                ne_items.append(_ne)
+            ne_items = [db_base.session_get('ne:%s:ne'%_ne) for _ne in Neobjlist]
+                
+        tmp_list = _make_ret_array(ne_items, Ne)
     
-        for _ne in ne_items:
-            tmp_ne = Ne(neid         = _get_value(_ne, 'neid'),
-                        nename       = _get_value(_ne, 'nename'),
-                        userlabel    = _get_value(_ne, 'userlabel'),
-                        runtime      = _get_value(_ne, 'runtime'),
-                        manager_ip   = _get_value(_ne, 'manager_ip'),
-                        vendor       = _get_value(_ne, 'vendor'),
-                        soft_version = _get_value(_ne, 'soft_version', None),
-                        nemodel      = _get_value(_ne, 'nemodel'),
-                        netype       = _get_value(_ne, 'netype'),
-                        memory_size  = _get_value(_ne, 'memory_size'),
-                        flash_size   = _get_value(_ne, 'flash_size'),
-                        cpu_size     = _get_value(_ne, 'cpu_size'))
-            
-            tmp_list.append(tmp_ne)
+        #=======================================================================
+        # for _ne in ne_items:
+        #     tmp_ne = Ne(neid         = _get_value(_ne, 'neid'),
+        #                 nename       = _get_value(_ne, 'nename'),
+        #                 userlabel    = _get_value(_ne, 'userlabel'),
+        #                 runtime      = _get_value(_ne, 'runtime'),
+        #                 manager_ip   = _get_value(_ne, 'manager_ip'),
+        #                 vendor       = _get_value(_ne, 'vendor'),
+        #                 soft_version = _get_value(_ne, 'soft_version', None),
+        #                 nemodel      = _get_value(_ne, 'nemodel'),
+        #                 netype       = _get_value(_ne, 'netype'),
+        #                 memory_size  = _get_value(_ne, 'memory_size'),
+        #                 flash_size   = _get_value(_ne, 'flash_size'),
+        #                 cpu_size     = _get_value(_ne, 'cpu_size'))
+        #=======================================================================
             
         return ResultModel(resultsign=1, nes=tmp_list)
     
@@ -86,6 +97,7 @@ class DeviceService(ServiceBase):
         return ResultModel(resultsign=1)
     
     
+    @rpc(_returns=ResultModel)
     def passiveSetNeFrameVendor(self):
         return
     
@@ -94,16 +106,22 @@ class DeviceService(ServiceBase):
 
         return ResultModel(resultsign=1)
     
+    
+    @rpc(_returns=ResultModel)
     def passiveSetNeSlotVendor(self):
         return
+    
     
     @rpc(_returns=ResultModel)
     def activeGetNeCardTms(self):
 
         return ResultModel(resultsign=1)
     
+    
+    @rpc(_returns=ResultModel)
     def passiveSetNeCardVendor(self):
         return
+    
     
     @rpc(_returns=ResultModel)
     def activeGetNePortTms(self):
@@ -149,6 +167,7 @@ class DeviceService(ServiceBase):
 
         return ResultModel(resultsign=1)
     
+    @rpc(_returns=ResultModel)
     def passiveSetNePortRelationVendor(self):
         return
     
@@ -182,6 +201,8 @@ class DeviceService(ServiceBase):
 
         return ResultModel(resultsign=1)
     
+    
+    @rpc(_returns=ResultModel)
     def passiveSetConfigFileVendor(self):
         return
     
@@ -191,6 +212,8 @@ class DeviceService(ServiceBase):
 
         return ResultModel(resultsign=1)
     
+    
+    @rpc(_returns=ResultModel)
     def passiveSetVpnVendor(self):
         return
     
@@ -200,6 +223,8 @@ class DeviceService(ServiceBase):
 
         return ResultModel(resultsign=1)
     
+    
+    @rpc(_returns=ResultModel)
     def passiveSetVlanVendor(self):
         return
     
@@ -237,6 +262,7 @@ class DeviceService(ServiceBase):
         return ResultModel(resultsign=1)
     
     
+    @rpc(_returns=ResultModel)
     def passiveSetAlarmByDeviceVendor(self):
         return
     
@@ -308,6 +334,7 @@ class DeviceService(ServiceBase):
     @rpc(_returns=ResultModel)
     def activeGetLinkPerfTms(self):
         return
+    
     
     @rpc(_returns=ResultModel)
     def activeGetCardPerfTms(self):
