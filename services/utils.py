@@ -23,7 +23,7 @@ class Flow(ComplexModel):
            ('srcport', Unicode),
            ('destip', Unicode),
            ('destport', Unicode),
-           ('protocal ', Unicode),
+           ('protocal', Unicode),
            ('packagesize', Unicode),
            ('packagecount', Unicode),
            ('passport', Unicode),

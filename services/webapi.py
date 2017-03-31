@@ -11,19 +11,9 @@ from services.utils import ResultModel, Sys, Ne, Neobjlist, Cardobjlist, Port, I
 from spyne import Integer, Unicode, Array
 from settings import sys_name, user_label, version
 from datas import db_base
-from tools.utilfunc import _get_value
+from tools.utilfunc import _get_value, _make_ret_array
 from tasks.snmp_worker import do_snmp_work
 from tasks.ftp_worker import ftp_up_xml
-
-
-def _make_ret_array(items, target_obj):
-    tmp_list = []
-    for _one in items:
-        new_ne = {k:_get_value(_one, k) for k in _one.keys()}
-        tmp_ne = target_obj(**new_ne)
-        tmp_list.append(tmp_ne)
-        
-    return tmp_list
 
 
 class DeviceService(ServiceBase):

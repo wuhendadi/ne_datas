@@ -8,6 +8,7 @@ from zeep import Client
 from services.utils import ResultModel, Neperf, Portperf, Linkperf, Cardperf, Flow
 from tasks.ftp_worker import ftp_up_xml
 from settings import server_url, sys_name, user_label, version
+from tools.utilfunc import _make_ret_array
 
 SERVER_UTILS = "services.utils"
 
@@ -37,22 +38,25 @@ def update_sys_vender(items=None):
 def update_ne_vender(items=None):
     t_client = Client(server_url)
     t_client.service.activeSetNeVendor()
+    if not items: items = db_base.session_select_all("ne:zj_*:ne")
     factory = t_client.type_factory(SERVER_UTILS)
-    tmp_list = factory.neArray([factory.ne(**one) for one in items])
+    tmp_list = factory.neArray(_make_ret_array(items, factory.ne))
     respose = t_client.service.passiveSetNeTms(tmp_list)
     return respose
 
 def update_frame_vender(items=None):
     t_client = Client(server_url)
     t_client.service.activeSetNeFrameVendor()
+    if not items: items = db_base.session_select_all("ne:zj_*:frame")
     factory = t_client.type_factory(SERVER_UTILS)
-    tmp_list = factory.frameArray([factory.frame(**one) for one in items])
+    tmp_list = factory.frameArray(_make_ret_array(items, factory.frame))
     respose = t_client.service.passiveSetNeFrameTms(tmp_list)
     return respose
 
 def update_slots_vender(items=None):
     t_client = Client(server_url)
     t_client.service.activeSetNeSlotVendor()
+    if not items: items = db_base.session_select_all("ne:zj_*:slot")
     factory = t_client.type_factory(SERVER_UTILS)
     tmp_list = factory.slotArray([factory.solt(**one) for one in items])
     respose = t_client.service.passiveSetNeSlotTms(tmp_list)
@@ -61,6 +65,7 @@ def update_slots_vender(items=None):
 def update_card_vender(items=None):
     t_client = Client(server_url)
     t_client.service.activeSetNeCardVendor()
+    if not items: items = db_base.session_select_all("ne:zj_*:card")
     factory = t_client.type_factory(SERVER_UTILS)
     tmp_list = factory.cardArray([factory.card(**one) for one in items])
     respose = t_client.service.passiveSetNeCardTms(tmp_list)
@@ -69,6 +74,7 @@ def update_card_vender(items=None):
 def update_port_vender(items=None):
     t_client = Client(server_url)
     t_client.service.activeSetNePortVendor()
+    if not items: items = db_base.session_select_all("ne:zj_*:port")
     factory = t_client.type_factory(SERVER_UTILS)
     tmp_list = factory.portArray([factory.port(**one) for one in items])
     respose = t_client.service.passiveSetNePortTms(tmp_list)
@@ -77,24 +83,25 @@ def update_port_vender(items=None):
 def update_port_relation_vendor(items=None):
     t_client = Client(server_url)
     t_client.service.activeSetNePortRelationVendor()
+    if not items: items = db_base.session_select_all("ne:zj_*:portrelation")
     factory = t_client.type_factory(SERVER_UTILS)
     tmp_list = factory.portrelationArray([factory.portrelation(**one) for one in items])
-    sys_obj = factory.sys(name=sys_name, userlabel=user_label, version=version, nes=tmp_list)
-    respose = t_client.service.passiveSetNePortRelationTms(sys_obj)
+    respose = t_client.service.passiveSetNePortRelationTms(tmp_list)
     return respose
 
 def update_link_vendor(items=None):
     t_client = Client(server_url)
     t_client.service.activeSetLinkVendor()
+    if not items: items = db_base.session_select_all("ne:zj_*:link")
     factory = t_client.type_factory(SERVER_UTILS)
     tmp_list = factory.linkArray([factory.link(**one) for one in items])
-    sys_obj = factory.sys(name=sys_name, userlabel=user_label, version=version, nes=tmp_list)
-    respose = t_client.service.passiveSetLinkTms(sys_obj)
+    respose = t_client.service.passiveSetLinkTms(tmp_list)
     return respose
 
 def update_config_file_vendor(items=None):
     t_client = Client(server_url)
     t_client.service.activeSetConfigFileVendor()
+    if not items: items = db_base.session_select_all("ne:zj_*:configfile")
     factory = t_client.type_factory(SERVER_UTILS)
     tmp_list = factory.configfileArray([factory.configfile(**one) for one in items])
     respose = t_client.service.passiveSetConfigFileTms(tmp_list)
@@ -103,6 +110,7 @@ def update_config_file_vendor(items=None):
 def update_vpn_vendor(items=None):
     t_client = Client(server_url)
     t_client.service.activeSetVpnVendor()
+    if not items: items = db_base.session_select_all("ne:zj_*:vpn")
     factory = t_client.type_factory(SERVER_UTILS)
     tmp_list = factory.vpnArray([factory.vpn(**one) for one in items])
     respose = t_client.service.passiveSetVpnTms(tmp_list)
@@ -111,6 +119,7 @@ def update_vpn_vendor(items=None):
 def update_vlan_vendor(items=None):
     t_client = Client(server_url)
     t_client.service.activeSetVlanVendor()
+    if not items: items = db_base.session_select_all("ne:zj_*:vlan")
     factory = t_client.type_factory(SERVER_UTILS)
     tmp_list = factory.vlanArray([factory.vlan(**one) for one in items])
     respose = t_client.service.passiveSetVlanTms(tmp_list)
@@ -119,6 +128,7 @@ def update_vlan_vendor(items=None):
 def update_alarm_vendor(items=None):
     t_client = Client(server_url)
     t_client.service.activeSetAlarmVendor()
+    if not items: items = db_base.session_select_all("alarm:zj_*:alarm")
     factory = t_client.type_factory(SERVER_UTILS)
     tmp_list = factory.alarmArray([factory.alarm(**one) for one in items])
     respose = t_client.service.passiveSetAlarmTms(tmp_list)
@@ -164,6 +174,7 @@ def compare_list(key, base_list, callbackfunc):
     
     
 if __name__ == '__main__':
-    update_sys_vender()
+    #update_sys_vender()
+    update_ne_vender()
     
     
